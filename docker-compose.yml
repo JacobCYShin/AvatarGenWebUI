@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web-demo:
+    build: .
+    container_name: web-demo
+    ports:
+      - "8000:8000"
+    environment:
+      - TTS_API_URL=http://host.docker.internal:7009/tts
+      - VIDEO_API_URL=http://host.docker.internal:8001/synthesize
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./outputs:/app/outputs
+      - ./temp:/app/temp
+    restart: unless-stopped
+
+# 주의사항:
+# 1. TTS 서버와 Video Generation 서버가 호스트에서 실행 중이어야 합니다
+# 2. Linux의 경우 host.docker.internal이 자동으로 설정되지 않으므로 extra_hosts를 사용합니다
+# 3. 모든 서버를 Docker로 실행하려면 docker-compose-full.yml을 참고하세요
+

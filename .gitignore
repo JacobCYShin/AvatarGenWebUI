@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+outputs/
+temp/
+*.zip
+.DS_Store
+Thumbs.db
+
+asset/sample_video/sample_argb.mov
