@@ -36,27 +36,38 @@
 
 ## 🚀 빠른 시작
 
-### 1. 로컬 환경에서 실행 (권장)
+### 1. 한 번에 실행 (권장)
+
+```bash
+cd /home/dev/AvatarGenWebUI
+./start_all_servers.sh
+```
+
+서버 종료: `./stop_all_servers.sh`  
+상태 확인: `./check_servers.sh`
+
+### 2. 개별 실행 (수동)
 
 ```bash
 # 1. TTS 서버 실행 (별도 터미널)
-cd ../TTS_server_only
-source /database/venv/melotts/bin/activate
+cd /home/dev/MeloTTS-server
+source .venv/bin/activate
 uvicorn tts_server:app --host 0.0.0.0 --port 7009
 
 # 2. Video Generation 서버 실행 (별도 터미널)
-cd ../video_generation_server
-# GPU 환경에서 실행
+cd /home/dev/VideoGenerationServer
+source /home/dev/livehuman-kr/.venv/bin/activate
 python video_server.py
 
 # 3. Web Demo 실행 (현재 터미널)
-cd web_demo
-bash start.sh
+cd /home/dev/AvatarGenWebUI
+source .venv/bin/activate
+python app.py
 ```
 
 브라우저에서 http://localhost:8000 접속
 
-### 2. Docker 환경에서 실행
+### 3. Docker 환경에서 실행
 
 #### 옵션 A: Host 네트워크 모드 (가장 간단)
 
