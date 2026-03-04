@@ -994,8 +994,9 @@
                             </button>
                         </div>
 
-                        <div id="videoStage" class="crop-stage mb-4">
-                            <video id="resultVideo" controls autoplay class="w-full rounded-lg shadow-lg"
+                        <div id="videoStage" class="crop-stage mb-4 overflow-hidden relative"
+                            style="border-radius: 0.5rem;">
+                            <video id="resultVideo" controls autoplay class="w-full rounded-lg shadow-lg relative z-0"
                                 style="max-height: 600px; object-fit: contain; background-color: #000; border: 1px solid rgba(16, 185, 129, 0.3);">
                                 <source id="videoSource" src="" type="video/mp4">
                                 브라우저가 비디오를 지원하지 않습니다.
@@ -1423,6 +1424,7 @@
             h: 0,
             scale: 1
         };
+        let isInitialCropLoad = true;
         let previewLoopId = null;
         let dragState = null;
 
@@ -1809,16 +1811,22 @@
             }
         }
 
-        function initCropper() {
+        function initCropper(forceReset = false) {
             cropState.naturalW = resultVideo.videoWidth;
             cropState.naturalH = resultVideo.videoHeight;
-            cropState.aspect = getSelectedRatio();
-            cropState.x = 0;
-            cropState.y = 0;
-            cropState.w = cropState.naturalW;
-            cropState.h = cropState.naturalH;
-            applyRatioToCrop(cropState.aspect);
-            buildResolutionOptions();
+
+            // Only force full-frame reset if explicitly requested OR it's the very first time loading this video
+            if (forceReset || isInitialCropLoad || !cropState.w) {
+                cropState.aspect = getSelectedRatio();
+                cropState.x = 0;
+                cropState.y = 0;
+                cropState.w = cropState.naturalW;
+                cropState.h = cropState.naturalH;
+                applyRatioToCrop(cropState.aspect);
+                buildResolutionOptions();
+                isInitialCropLoad = false;
+            }
+
             setCropEnabled(true);
             updateCropBox();
             updatePreview();
@@ -2161,10 +2169,10 @@
         applyCropBtn.addEventListener('click', applyCropAndExit);
 
         floatResetBtn.addEventListener('click', () => {
-            initCropper();
+            initCropper(true);
         });
         resultVideo.addEventListener('loadedmetadata', () => {
-            initCropper();
+            initCropper(false);
         });
 
         resultVideo.addEventListener('play', startPreviewLoop);
@@ -2505,6 +2513,10 @@
                         videoSource.src = previewUrl;
                         downloadLink.href = data.video_url;
                         baseVideoUrl = data.video_url;
+
+                        // Fresh generation -> permit wiping bounding box state to start fresh
+                        isInitialCropLoad = true;
+
                         const videoExt = data.video_url.split("?")[0].split(".").pop();
                         downloadLink.download = `video_${data.video_id}.${videoExt}`;
 
