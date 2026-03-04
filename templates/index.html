@@ -162,59 +162,58 @@
             accent-color: var(--primary-color);
         }
 
-        /* Light Mode Styles (Phase 4 Overhaul) */
+        /* Light Mode Styles (Phase 9 Contrast Overhaul) */
         body.light-mode {
-            --primary-color: #009688;
-            --secondary-color: #00796B;
-            --accent-color: #004D40;
-            --success-color: #10B981;
-            --background-color: #F8FAFC;
-            --card-bg: #FFFFFF;
-            --surface-bg: #F1F5F9;
-            --text-color: #0F172A;
-            --text-muted: #475569;
-            --border-color: rgba(15, 23, 42, 0.1);
-            --box-border: rgba(15, 23, 42, 0.15);
-            background: #F8FAFC;
+            --primary-color: #0d9488;
+            /* Tailwind teal-600 */
+            --secondary-color: #0f766e;
+            /* Tailwind teal-700 */
+            --text-color: #111827;
+            /* Tailwind gray-900 */
+            --text-muted: #4b5563;
+            /* Tailwind gray-600 */
+            --card-bg: #ffffff;
+            background: #f3f4f6;
+            /* Tailwind gray-100 */
             color: var(--text-color);
         }
 
         body.light-mode .gradient-bg {
-            background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%);
-            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            background: #ffffff !important;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         }
 
         body.light-mode .bg-white {
-            background: #FFFFFF !important;
-            border: 1px solid rgba(15, 23, 42, 0.1);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            background: #ffffff !important;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         body.light-mode input,
         body.light-mode textarea,
         body.light-mode select {
-            background: #FFFFFF !important;
-            color: var(--text-color) !important;
-            border: 1px solid rgba(15, 23, 42, 0.2) !important;
+            background: #ffffff !important;
+            color: #111827 !important;
+            border: 1px solid #d1d5db !important;
         }
 
         body.light-mode input:focus,
         body.light-mode textarea:focus,
         body.light-mode select:focus {
             border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 3px rgba(0, 150, 136, 0.15) !important;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2) !important;
         }
 
-        /* Light Mode 박스 레이아웃 통일 (색상은 유지, padding/border/shadow만 동일) */
+        /* Light Mode Clean Panel Styles */
         body.light-mode .bg-blue-50,
         body.light-mode .bg-purple-50,
-        body.light-mode .bg-green-50 {
-            background: rgba(0, 122, 109, 0.03) !important;
-            backdrop-filter: blur(10px);
-            border: 2px solid transparent !important;
+        body.light-mode .bg-green-50,
+        body.light-mode #videoInfo {
+            background: #f9fafb !important;
+            backdrop-filter: none;
+            border: 1px solid #e5e7eb !important;
             border-radius: 0.5rem !important;
-            padding: 0 !important;
             box-shadow: none !important;
         }
 
@@ -235,107 +234,38 @@
         body.light-mode .text-blue-900,
         body.light-mode .text-purple-900,
         body.light-mode .text-green-900 {
-            color: #007A6D !important;
+            color: #111827 !important;
             font-weight: 700;
         }
 
         body.light-mode .text-blue-700,
         body.light-mode .text-purple-700,
         body.light-mode .text-green-700 {
-            color: #1F2937 !important;
-        }
-
-        body.light-mode .spinner {
-            border: 3px solid #e5e7eb;
-            border-top: 3px solid var(--primary-color);
-        }
-
-        body.light-mode #progressBar {
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)) !important;
-        }
-
-        body.light-mode .w-full.rounded-full {
-            border: 1px solid rgba(0, 122, 109, 0.3) !important;
-        }
-
-        body.light-mode footer {
-            background: #FFFFFF !important;
-            border-top: 1px solid rgba(15, 23, 42, 0.1);
-        }
-
-        body.light-mode h1 {
-            background: transparent !important;
-            color: #0F172A !important;
-            -webkit-background-clip: unset !important;
-            background-clip: unset !important;
-            -webkit-text-fill-color: unset !important;
-            text-shadow: none !important;
-        }
-
-        body.light-mode .gradient-bg {
-            background: linear-gradient(135deg, #F8FAFC 0%, #E0F2F1 100%) !important;
-        }
-
-        body.light-mode .gradient-bg p {
-            color: #475569 !important;
-            font-weight: 500;
-        }
-
-        body.light-mode footer p {
-            color: #475569 !important;
-            opacity: 1 !important;
-        }
-
-        body.light-mode .info-card {
-            background: #FFFFFF !important;
-            border: 1px solid rgba(15, 23, 42, 0.1) !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-        }
-
-        body.light-mode .info-card h3 {
-            color: #0F172A !important;
-            text-shadow: none !important;
-        }
-
-        body.light-mode .info-card p {
-            color: #475569 !important;
-        }
-
-        body.light-mode button[type="button"] {
-            background: #FFFFFF !important;
-            color: var(--primary-color) !important;
-            border: 2px solid var(--primary-color) !important;
-        }
-
-        body.light-mode #videoInfo {
-            background: rgba(0, 122, 109, 0.05) !important;
-            border: 2px solid rgba(0, 122, 109, 0.4) !important;
-        }
-
-        body.light-mode #videoInfo span {
-            color: #007A6D !important;
+            color: #374151 !important;
         }
 
         body.light-mode label.flex.items-center {
-            background: rgba(0, 122, 109, 0.05) !important;
-            border-color: rgba(0, 122, 109, 0.4) !important;
+            background: #ffffff !important;
+            border-color: #e5e7eb !important;
+            color: #111827 !important;
+            border-width: 2px !important;
         }
 
         body.light-mode label.flex.items-center:hover {
-            border-color: #007A6D !important;
-            background: rgba(0, 122, 109, 0.1) !important;
+            border-color: #d1d5db !important;
+            background: #f9fafb !important;
         }
 
         body.light-mode label.flex.items-center input:checked {
-            accent-color: #007A6D !important;
+            accent-color: var(--primary-color) !important;
         }
 
         body.light-mode .font-semibold {
-            color: #1F2937 !important;
+            color: #111827 !important;
         }
 
         body.light-mode .text-xs.text-gray-500 {
-            color: #6B7280 !important;
+            color: #6b7280 !important;
         }
 
         body.light-mode #submitBtn {
@@ -393,10 +323,10 @@
 
         /* Theme Toggle Button */
         .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 50;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             border: none;
             border-radius: 50%;
@@ -597,13 +527,12 @@
 </head>
 
 <body class="min-h-screen">
-    <!-- Theme Toggle Button -->
-    <button class="theme-toggle" id="themeToggle" title="테마 전환">
-        <span id="themeIcon">🌙</span>
-    </button>
-
     <!-- 헤더 -->
-    <div class="gradient-bg text-white py-8 shadow-lg">
+    <div class="gradient-bg text-white py-8 shadow-lg relative">
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle" id="themeToggle" title="테마 전환">
+            <span id="themeIcon">🌙</span>
+        </button>
         <div class="container mx-auto px-4">
             <h1 class="text-3xl md:text-4xl font-bold text-center mb-2 flex flex-col md:flex-row items-center justify-center gap-4"
                 style="font-family: 'Poppins', 'Inter', sans-serif; background: linear-gradient(135deg, #FFFFFF 0%, #00E2B0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 2px 8px rgba(0, 226, 176, 0.3);">
