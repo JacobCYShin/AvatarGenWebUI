@@ -565,8 +565,8 @@
 <body class="min-h-screen">
     <!-- 헤더 -->
     <div class="gradient-bg text-white py-8 shadow-lg relative">
-        <!-- Theme Toggle Button -->
-        <button class="theme-toggle" id="themeToggle" title="테마 전환">
+        <!-- Theme Toggle Button (Disabled for now) -->
+        <button class="theme-toggle hidden" id="themeToggle" title="테마 전환">
             <span id="themeIcon">🌙</span>
         </button>
         <div class="container mx-auto px-4">
@@ -1380,10 +1380,14 @@
         const body = document.body;
 
         // Load saved theme or default to dark
-        const savedTheme = localStorage.getItem('theme') || 'dark';
+        // Currently forced to dark mode as requested, ignoring localStorage to prevent getting stuck in light mode
+        const savedTheme = 'dark'; // localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'light') {
             body.classList.add('light-mode');
             themeIcon.textContent = '☀️';
+        } else {
+            body.classList.remove('light-mode');
+            localStorage.setItem('theme', 'dark'); // Clear any stuck light mode preferences
         }
 
         themeToggle.addEventListener('click', () => {
