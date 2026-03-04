@@ -1082,6 +1082,10 @@
                                 <span class="crop-handle corner ne" data-handle="ne"></span>
                                 <span class="crop-handle corner sw" data-handle="sw"></span>
                                 <span class="crop-handle corner se" data-handle="se"></span>
+                                <!-- Center grab area for moving the whole box -->
+                                <span class="crop-handle move" data-handle="move"
+                                    style="position: absolute; inset: 0; z-index: -1;"></span>
+
                                 <!-- Edge handles (for Free aspect ratio) -->
                                 <span class="crop-handle edge n" data-handle="n"></span>
                                 <span class="crop-handle edge s" data-handle="s"></span>
@@ -2143,6 +2147,11 @@
             applyCropBtn.disabled = true;
             floatApplyBtn.disabled = true;
 
+            // Visual feedback for floating button
+            const originalFloatText = floatApplyBtn.textContent;
+            floatApplyBtn.textContent = '적용 중...';
+            floatApplyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
             cropStatus.textContent = '적용 중...';
             cropStatusSpinner.classList.remove('hidden');
             cropStatusMobile.textContent = '적용 중...';
@@ -2198,6 +2207,9 @@
             } finally {
                 applyCropBtn.disabled = false;
                 floatApplyBtn.disabled = false;
+                // Revert visual feedback for floating button
+                floatApplyBtn.textContent = originalFloatText;
+                floatApplyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 cropStatusSpinner.classList.add('hidden');
                 cropStatusSpinnerMobile.classList.add('hidden');
             }
