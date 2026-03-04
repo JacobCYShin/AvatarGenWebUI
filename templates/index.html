@@ -498,44 +498,89 @@
             position: absolute;
             border: 2px solid var(--primary-color);
             box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.4);
-            cursor: move;
             min-width: 32px;
             min-height: 32px;
             border-radius: 8px;
-            pointer-events: auto;
+            pointer-events: none;
+            /* Let touches pass through the center for scrolling! */
         }
 
         .crop-handle {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            pointer-events: auto;
+            /* Handles intercept touch to drag */
+        }
+
+        /* 4 Corners (Visual blue circles) */
+        .crop-handle.corner {
+            width: 14px;
+            height: 14px;
             background: var(--primary-color);
             border-radius: 50%;
             border: 2px solid #0c0c0c;
+            z-index: 10;
         }
 
         .crop-handle.nw {
-            top: -6px;
-            left: -6px;
+            top: -7px;
+            left: -7px;
             cursor: nwse-resize;
         }
 
         .crop-handle.ne {
-            top: -6px;
-            right: -6px;
+            top: -7px;
+            right: -7px;
             cursor: nesw-resize;
         }
 
         .crop-handle.sw {
-            bottom: -6px;
-            left: -6px;
+            bottom: -7px;
+            left: -7px;
             cursor: nesw-resize;
         }
 
         .crop-handle.se {
-            bottom: -6px;
-            right: -6px;
+            bottom: -7px;
+            right: -7px;
             cursor: nwse-resize;
+        }
+
+        /* 4 Edges (Invisible thick grab bars) */
+        .crop-handle.edge {
+            background: transparent;
+            z-index: 5;
+        }
+
+        .crop-handle.n,
+        .crop-handle.s {
+            left: 10px;
+            right: 10px;
+            height: 24px;
+            cursor: ns-resize;
+        }
+
+        .crop-handle.n {
+            top: -12px;
+        }
+
+        .crop-handle.s {
+            bottom: -12px;
+        }
+
+        .crop-handle.e,
+        .crop-handle.w {
+            top: 10px;
+            bottom: 10px;
+            width: 24px;
+            cursor: ew-resize;
+        }
+
+        .crop-handle.w {
+            left: -12px;
+        }
+
+        .crop-handle.e {
+            right: -12px;
         }
 
         .crop-disabled {
@@ -995,12 +1040,16 @@
                 <!-- 결과 표시 -->
                 <div id="resultState" class="hidden">
                     <!-- 비디오 결과 -->
+                    <!-- 비디오 결과 -->
                     <div id="videoResult" class="relative pb-24 md:pb-0">
-                        <!-- Crop Edit Mode Toggle Button -->
-                        <div class="absolute top-4 right-4 z-40">
+
+                        <!-- Header with dynamic actions outside video -->
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-xl font-bold text-gray-800 hidden md:block">결과</h3>
+                            <!-- Crop Edit Mode Toggle Button -->
                             <button type="button" id="toggleCropModeBtn"
-                                class="flex items-center gap-2 px-4 py-2 font-bold rounded-full shadow-xl transition hover:scale-105"
-                                style="background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); border: 2px solid var(--primary-color); color: var(--text-color);">
+                                class="ml-auto flex items-center gap-2 px-4 py-2 font-bold rounded-lg shadow-md transition hover:scale-105"
+                                style="background: rgba(15, 23, 42, 0.9); border: 1px solid var(--primary-color); color: var(--text-color);">
                                 <svg class="w-5 h-5 text-primary-color" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1024,27 +1073,28 @@
 
                             <div id="cropBox" class="crop-box hidden z-20">
                                 <!-- Corner handles -->
-                                <span class="crop-handle nw" data-handle="nw"></span>
-                                <span class="crop-handle ne" data-handle="ne"></span>
-                                <span class="crop-handle sw" data-handle="sw"></span>
-                                <span class="crop-handle se" data-handle="se"></span>
+                                <span class="crop-handle corner nw" data-handle="nw"></span>
+                                <span class="crop-handle corner ne" data-handle="ne"></span>
+                                <span class="crop-handle corner sw" data-handle="sw"></span>
+                                <span class="crop-handle corner se" data-handle="se"></span>
                                 <!-- Edge handles (for Free aspect ratio) -->
-                                <span class="crop-handle n" data-handle="n"></span>
-                                <span class="crop-handle s" data-handle="s"></span>
-                                <span class="crop-handle w" data-handle="w"></span>
-                                <span class="crop-handle e" data-handle="e"></span>
+                                <span class="crop-handle edge n" data-handle="n"></span>
+                                <span class="crop-handle edge s" data-handle="s"></span>
+                                <span class="crop-handle edge w" data-handle="w"></span>
+                                <span class="crop-handle edge e" data-handle="e"></span>
 
                                 <!-- Floating Action Bar attached to the box -->
                                 <div id="cropFloatActions"
-                                    class="absolute left-1/2 bottom-[-60px] transform -translate-x-1/2 flex items-center justify-center gap-2 p-2 rounded-xl shadow-2xl opacity-0 scale-95 pointer-events-none transition-all duration-300"
-                                    style="background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(0, 226, 176, 0.4);">
+                                    class="absolute left-1/2 bottom-[-55px] transform -translate-x-1/2 flex flex-row flex-nowrap w-max items-center justify-center gap-2 px-4 py-2 rounded-xl shadow-2xl opacity-0 scale-95 pointer-events-none transition-all duration-300"
+                                    style="background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border: 2px solid rgba(0, 226, 176, 0.6); z-index: 50;">
+                                    <span class="text-xs text-gray-300 mr-1 hidden sm:inline-block">영역 변경 완료:</span>
                                     <button type="button" id="floatApplyBtn"
-                                        class="bg-primary-color text-black font-bold px-4 py-2 rounded-lg text-sm transition hover:bg-opacity-80 shadow-[0_0_10px_rgba(0,226,176,0.3)]">적용</button>
+                                        class="bg-primary-color text-black font-extrabold px-4 py-2 rounded-lg text-sm transition hover:bg-opacity-80 shadow-[0_0_10px_rgba(0,226,176,0.5)]">적용</button>
                                     <button type="button" id="floatResetBtn"
-                                        class="bg-gray-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition hover:bg-gray-600">초기화</button>
-                                    <div class="w-px h-6 bg-gray-500 mx-1"></div>
+                                        class="bg-gray-700 text-white font-semibold px-3 py-2 rounded-lg text-sm transition hover:bg-gray-600">초기화</button>
+                                    <div class="w-px h-5 bg-gray-500 mx-1"></div>
                                     <button type="button" id="floatCancelBtn"
-                                        class="text-gray-300 hover:text-white px-2 py-2 rounded-lg text-sm transition">닫기</button>
+                                        class="text-gray-400 hover:text-white px-2 py-2 rounded-lg text-sm transition font-medium">닫기</button>
                                 </div>
                             </div>
                         </div>
@@ -1444,7 +1494,7 @@
                 cropOverlay.classList.remove('hidden');
                 cropBox.classList.remove('hidden');
                 desktopOutputPreviewContainer.classList.remove('md:block'); // hide preview to focus
-                cropFloatActions.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                // Keep actions hidden initially until they touch/drag as requested
                 toggleCropModeBtn.innerHTML = `
                             <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -1832,6 +1882,7 @@
                 offsetX,
                 offsetY
             };
+            cropFloatActions.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
             event.preventDefault();
         }
 
@@ -1876,17 +1927,22 @@
 
         function stopDrag() {
             dragState = null;
+            if (isCropMode) {
+                cropFloatActions.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+            }
         }
 
         cropBox.addEventListener('pointerdown', (event) => {
             // Preempt touch-scroll IF hitting a crop handle
-            if (event.pointerType === 'touch') {
+            if (event.pointerType === 'touch' && event.target.classList.contains('crop-handle')) {
                 // we let JS handle dragging, no native scrolling
                 event.preventDefault();
             }
-            const handle = event.target.dataset.handle || 'move';
-            startDrag(event, handle);
-            cropBox.setPointerCapture(event.pointerId);
+            const handle = event.target.dataset.handle || null;
+            if (handle) {
+                startDrag(event, handle);
+                cropBox.setPointerCapture(event.pointerId);
+            }
         });
 
         cropBox.addEventListener('pointermove', (event) => {
