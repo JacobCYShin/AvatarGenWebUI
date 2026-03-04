@@ -1465,7 +1465,10 @@
                 isCropMode = false;
                 cropOverlay.classList.add('hidden');
                 resultVideo.style.pointerEvents = 'auto';
-                updateStatusMessage('');
+                cropStatus.textContent = '';
+                cropStatusSpinner.classList.add('hidden');
+                if (cropStatusMobile) cropStatusMobile.textContent = '';
+                if (cropStatusSpinnerMobile) cropStatusSpinnerMobile.classList.add('hidden');
                 clearPreview();
 
                 // Reset button UI
