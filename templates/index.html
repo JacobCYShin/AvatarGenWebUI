@@ -1486,6 +1486,9 @@
             aspect: null
         };
         let baseVideoUrl = '';
+        let originalVideoUrl = '';   // Caches the 100% uncropped video
+        let lastCroppedVideoUrl = '';// Caches the latest cropped output
+
         let outputState = {
             w: 0,
             h: 0,
@@ -1499,7 +1502,12 @@
         function toggleCropMode() {
             isCropMode = !isCropMode;
             if (isCropMode) {
-                // Enter Crop Mode
+                // Enter Crop Mode: Restore original uncropped video for editing
+                if (originalVideoUrl && videoSource.src !== originalVideoUrl) {
+                    videoSource.src = originalVideoUrl;
+                    resultVideo.load();
+                }
+
                 resultVideo.removeAttribute('controls');
                 resultVideo.pause();
                 resultVideo.style.pointerEvents = 'none'; // Lock video player interactions
@@ -1514,7 +1522,12 @@
                             조절 닫기
                         `;
             } else {
-                // Exit Crop Mode
+                // Exit Crop Mode: Restore to cropped version if available
+                if (lastCroppedVideoUrl && videoSource.src !== lastCroppedVideoUrl) {
+                    videoSource.src = lastCroppedVideoUrl;
+                    resultVideo.load();
+                }
+
                 resultVideo.setAttribute('controls', 'controls');
                 resultVideo.style.pointerEvents = 'auto'; // Unlock video
                 cropOverlay.classList.add('hidden');
@@ -2186,8 +2199,9 @@
                 cropStatusMobile.textContent = msg;
 
                 // Reflect cropped video in resultVideo directly
-                const videoSource = document.getElementById('videoSource');
-                videoSource.src = `${data.output_url}?t=${Date.now()}`;
+                const outputUrl = `${data.output_url}?t=${Date.now()}`;
+                lastCroppedVideoUrl = outputUrl;
+                videoSource.src = outputUrl;
                 resultVideo.load();
 
                 // Because cropmode pauses the video, we'll auto-exit cropmode on apply
@@ -2405,6 +2419,8 @@
             document.getElementById('submitBtn').disabled = false;
             document.getElementById('videoInfo').classList.add('hidden');
             baseVideoUrl = '';
+            originalVideoUrl = '';
+            lastCroppedVideoUrl = '';
             cropState = {
                 x: 0,
                 y: 0,
@@ -2554,6 +2570,9 @@
 
                         // 캐시 방지를 위해 타임스탬프 추가
                         const previewUrl = data.preview_url ? `${data.preview_url}?t=${Date.now()}` : `${data.video_url}?t=${Date.now()}`;
+                        originalVideoUrl = previewUrl; // 최초 생성된 원본 보관
+                        lastCroppedVideoUrl = '';      // 크롭 내역 초기화
+
                         videoSource.src = previewUrl;
                         downloadLink.href = data.video_url;
                         baseVideoUrl = data.video_url;
