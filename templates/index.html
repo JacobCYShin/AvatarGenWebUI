@@ -321,6 +321,42 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important;
         }
 
+        body.light-mode #charCountContainer {
+            background: #F1F5F9 !important;
+        }
+
+        body.light-mode #charCountContainer span.text-gray-400 {
+            color: #64748B !important;
+        }
+
+        body.light-mode #suggestedScriptsBox {
+            background: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+        }
+
+        body.light-mode #suggestedScriptsBox>span {
+            color: #475569 !important;
+        }
+
+        body.light-mode #emptyStateGradient {
+            background-image: linear-gradient(to top, rgba(255, 255, 255, 0.9), transparent) !important;
+        }
+
+        body.light-mode #emptyState .relative.w-full {
+            background: #F8FAFC !important;
+        }
+
+        body.light-mode #emptyStatePreviewBadge {
+            background: var(--primary-color) !important;
+            color: #FFFFFF !important;
+            border-color: var(--primary-color) !important;
+            opacity: 1 !important;
+        }
+
+        body.light-mode #emptyStatePreviewTitle {
+            color: #0F172A !important;
+        }
+
         /* Theme Toggle Button */
         .theme-toggle {
             position: absolute;
@@ -660,7 +696,7 @@
                             </button>
 
                             <!-- 글자 수 카운터 -->
-                            <div
+                            <div id="charCountContainer"
                                 class="absolute bottom-3 right-3 text-sm flex items-center bg-black bg-opacity-50 px-2 py-1 rounded">
                                 <span id="charCount" class="font-semibold text-primary-color">0</span><span
                                     class="text-gray-400 ml-1">/ 1000 글자</span>
@@ -668,7 +704,7 @@
                         </div>
 
                         <!-- 예시 태그 버튼 (칩 스타일) -->
-                        <div
+                        <div id="suggestedScriptsBox"
                             class="flex flex-wrap gap-2 mt-3 p-2 bg-gray-900 bg-opacity-50 rounded-lg border border-gray-800">
                             <span class="text-xs text-gray-400 font-medium py-1.5 px-1">추천 스크립트:</span>
                             <button type="button"
@@ -904,14 +940,14 @@
                                 src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-connection-lines-in-space-27419-large.mp4"
                                 type="video/mp4">
                         </video>
-                        <div
+                        <div id="emptyStateGradient"
                             class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80">
                         </div>
                         <div class="absolute bottom-6 left-0 right-0 z-10 px-4">
-                            <div
+                            <div id="emptyStatePreviewBadge"
                                 class="inline-block px-3 py-1 mb-2 rounded-full bg-primary-color bg-opacity-20 border border-primary-color text-primary-color text-xs font-bold backdrop-blur-sm animate-pulse">
                                 PREVIEW</div>
-                            <div class="text-white text-lg font-bold">자연스러운 AI 아바타</div>
+                            <div id="emptyStatePreviewTitle" class="text-white text-lg font-bold">자연스러운 AI 아바타</div>
                         </div>
                     </div>
 
