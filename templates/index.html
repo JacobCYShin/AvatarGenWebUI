@@ -272,6 +272,10 @@
             text-shadow: none !important;
         }
 
+        body.light-mode .gradient-bg {
+            background: linear-gradient(135deg, #F8FAFC 0%, #E0F2F1 100%) !important;
+        }
+
         body.light-mode .gradient-bg p {
             color: #475569 !important;
             font-weight: 500;
@@ -497,7 +501,7 @@
         .crop-box {
             position: absolute;
             border: 2px solid var(--primary-color);
-            box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.15);
             min-width: 32px;
             min-height: 32px;
             border-radius: 8px;
@@ -509,6 +513,8 @@
             position: absolute;
             pointer-events: auto;
             /* Handles intercept touch to drag */
+            touch-action: none !important;
+            /* Stop browser handling standard scroll gestures on the handles */
         }
 
         /* 4 Corners (Visual blue circles) */
@@ -1066,9 +1072,8 @@
                                 브라우저가 비디오를 지원하지 않습니다.
                             </video>
 
-                            <!-- Dim Overlay (Only visible in crop mode) -->
                             <div id="cropOverlay"
-                                class="absolute inset-0 bg-black bg-opacity-60 hidden pointer-events-none rounded-lg z-10">
+                                class="absolute inset-0 bg-transparent hidden pointer-events-none rounded-lg z-10 transition-colors duration-300">
                             </div>
 
                             <div id="cropBox" class="crop-box hidden z-20">
@@ -1083,19 +1088,21 @@
                                 <span class="crop-handle edge w" data-handle="w"></span>
                                 <span class="crop-handle edge e" data-handle="e"></span>
 
-                                <!-- Floating Action Bar attached to the box -->
-                                <div id="cropFloatActions"
-                                    class="absolute left-1/2 bottom-[-55px] transform -translate-x-1/2 flex flex-row flex-nowrap w-max items-center justify-center gap-2 px-4 py-2 rounded-xl shadow-2xl opacity-0 scale-95 pointer-events-none transition-all duration-300"
-                                    style="background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border: 2px solid rgba(0, 226, 176, 0.6); z-index: 50;">
-                                    <span class="text-xs text-gray-300 mr-1 hidden sm:inline-block">영역 변경 완료:</span>
-                                    <button type="button" id="floatApplyBtn"
-                                        class="bg-primary-color text-black font-extrabold px-4 py-2 rounded-lg text-sm transition hover:bg-opacity-80 shadow-[0_0_10px_rgba(0,226,176,0.5)]">적용</button>
-                                    <button type="button" id="floatResetBtn"
-                                        class="bg-gray-700 text-white font-semibold px-3 py-2 rounded-lg text-sm transition hover:bg-gray-600">초기화</button>
-                                    <div class="w-px h-5 bg-gray-500 mx-1"></div>
-                                    <button type="button" id="floatCancelBtn"
-                                        class="text-gray-400 hover:text-white px-2 py-2 rounded-lg text-sm transition font-medium">닫기</button>
-                                </div>
+                            </div>
+
+                            <!-- Floating Action Bar OUTSIDE the box to permit clicks safely -->
+                            <div id="cropFloatActions"
+                                class="absolute left-1/2 bottom-8 transform -translate-x-1/2 flex flex-row flex-nowrap w-max items-center justify-center gap-2 px-4 py-2 rounded-xl shadow-2xl opacity-0 scale-95 transition-all duration-300 pointer-events-none"
+                                style="background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border: 2px solid rgba(0, 226, 176, 0.6); z-index: 50;">
+                                <span class="text-xs text-gray-300 mr-1 hidden sm:inline-block">영역 변경 완료:</span>
+                                <button type="button" id="floatApplyBtn"
+                                    class="text-black font-extrabold px-4 py-2 rounded-lg text-sm transition hover:opacity-80 shadow-[0_0_10px_rgba(0,226,176,0.5)]"
+                                    style="background: #00E2B0;">적용</button>
+                                <button type="button" id="floatResetBtn"
+                                    class="bg-gray-700 text-white font-semibold px-3 py-2 rounded-lg text-sm transition hover:bg-gray-600">초기화</button>
+                                <div class="w-px h-5 bg-gray-500 mx-1"></div>
+                                <button type="button" id="floatCancelBtn"
+                                    class="text-gray-400 hover:text-white px-2 py-2 rounded-lg text-sm transition font-medium">닫기</button>
                             </div>
                         </div>
 
@@ -1489,6 +1496,7 @@
             isCropMode = !isCropMode;
             if (isCropMode) {
                 // Enter Crop Mode
+                resultVideo.removeAttribute('controls');
                 resultVideo.pause();
                 resultVideo.style.pointerEvents = 'none'; // Lock video player interactions
                 cropOverlay.classList.remove('hidden');
@@ -1503,6 +1511,7 @@
                         `;
             } else {
                 // Exit Crop Mode
+                resultVideo.setAttribute('controls', 'controls');
                 resultVideo.style.pointerEvents = 'auto'; // Unlock video
                 cropOverlay.classList.add('hidden');
                 cropBox.classList.add('hidden');
@@ -1944,6 +1953,19 @@
                 cropBox.setPointerCapture(event.pointerId);
             }
         });
+
+        // Enforce strong scroll block for iOS Safari during touch interaction on handles
+        cropBox.addEventListener('touchstart', (event) => {
+            if (event.target.classList.contains('crop-handle')) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        cropBox.addEventListener('touchmove', (event) => {
+            if (dragState) {
+                event.preventDefault();
+            }
+        }, { passive: false });
 
         cropBox.addEventListener('pointermove', (event) => {
             if (dragState && event.pointerType === 'touch') {
