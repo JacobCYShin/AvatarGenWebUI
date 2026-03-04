@@ -1032,6 +1032,16 @@
 
                         <div id="videoStage" class="crop-stage mb-4 overflow-hidden relative"
                             style="border-radius: 0.5rem;">
+
+                            <!-- Video Loading Skeleton -->
+                            <div id="videoSkeleton"
+                                class="absolute inset-0 bg-gray-900 z-30 hidden flex flex-col items-center justify-center transition-opacity duration-300 pointer-events-none rounded-lg">
+                                <div
+                                    class="w-12 h-12 rounded-full border-4 border-gray-700 border-t-primary-color animate-spin mb-4">
+                                </div>
+                                <div class="text-sm font-semibold text-gray-300 animate-pulse">비디오 불러오는 중...</div>
+                            </div>
+
                             <video id="resultVideo" controls autoplay class="w-full rounded-lg shadow-lg relative z-0"
                                 style="max-height: 600px; object-fit: contain; background-color: #000; border: 1px solid rgba(16, 185, 129, 0.3);">
                                 <source id="videoSource" src="" type="video/mp4">
@@ -1468,6 +1478,13 @@
 
         function toggleCropMode() {
             isCropMode = !isCropMode;
+
+            // Show the skeleton loader while we swap the video source to hide the browser's default reload flicker
+            const videoSkeleton = document.getElementById('videoSkeleton');
+            if (videoSkeleton) {
+                videoSkeleton.classList.remove('hidden', 'opacity-0');
+            }
+
             if (isCropMode) {
                 // Enter Crop Mode: Restore original uncropped video for editing
                 if (originalVideoUrl && videoSource.src !== originalVideoUrl) {
@@ -2209,6 +2226,13 @@
         });
         resultVideo.addEventListener('loadedmetadata', () => {
             initCropper(false);
+
+            // Dismiss skeleton mask if it is showing
+            const videoSkeleton = document.getElementById('videoSkeleton');
+            if (videoSkeleton && !videoSkeleton.classList.contains('hidden')) {
+                videoSkeleton.classList.add('opacity-0');
+                setTimeout(() => videoSkeleton.classList.add('hidden'), 300);
+            }
         });
 
         resultVideo.addEventListener('play', startPreviewLoop);
